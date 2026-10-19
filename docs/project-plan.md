@@ -10,7 +10,7 @@ and AWS-ready deployment.
 
 ## Phases & Milestones
 
-### PHASE 0 — Discovery & Architecture  ✅ (Current)
+### PHASE 0 — Discovery & Architecture  ✅ (Complete)
 
 **Goal**: Define requirements, architecture, data flows, and tech stack.
 
@@ -21,7 +21,7 @@ and AWS-ready deployment.
 
 ---
 
-### PHASE 1 — Repository & Local Infrastructure
+### PHASE 1 — Repository & Local Infrastructure  ✅ (Complete)
 
 **Goal**: Monorepo skeleton, all services run via docker compose up.
 
@@ -39,10 +39,12 @@ and AWS-ready deployment.
 
 **Acceptance**: docker compose up → all 5 services healthy, health endpoints return 200.
 
+**Verification (2026-10-19)**: `docker compose up --build -d` started all five services and each reported healthy. `/health` returned 200; `/ready` returned 200 with PostgreSQL and Redis checks passing; the frontend `/ready` proxy returned the same dependency status; the landing page rendered in a browser with the API marked ready; and the Celery worker logged its ready signal. `npm run build` and the API Python syntax check passed. The Vite proxy was also verified with the frontend running outside Compose.
+
 
 ---
 
-### PHASE 2 — Authentication & Database
+### PHASE 2 — Authentication & Database (Next)
 
 **Goal**: Real auth, real DB schema, protected routes.
 

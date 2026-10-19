@@ -87,6 +87,7 @@ services:
       dockerfile: Dockerfile
     environment:
       NODE_ENV: development
+      VITE_API_PROXY_TARGET: http://api:8000
     ports:
       - "${WEB_PORT:-3000}:3000"
     volumes:
