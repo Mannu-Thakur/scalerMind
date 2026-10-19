@@ -44,7 +44,7 @@ and AWS-ready deployment.
 
 ---
 
-### PHASE 2 — Authentication & Database (Next)
+### PHASE 2 — Authentication & Database ✅ (Complete)
 
 **Goal**: Real auth, real DB schema, protected routes.
 
@@ -61,6 +61,10 @@ and AWS-ready deployment.
 - Tests: auth endpoints, token validation, role enforcement, DB constraints
 
 **Acceptance**: Login flow end-to-end. Protected routes reject unauthenticated requests.
+
+**Implementation note**: Refresh-token lifetime is 7 days, matching the architecture and project plan. The initial schema includes a `refresh_sessions` table in addition to the 17 domain tables listed above. Production readiness still requires deployment hardening, rate limiting, CORS policy, and operational checks outside this phase's local acceptance.
+
+**Verification (2026-10-19)**: Eight API integration tests passed for signup, duplicate registration, password validation, login, protected routes, role enforcement, refresh rotation and replay revocation, logout, token type/lifetime, and production auth settings (one upstream Starlette deprecation warning). `alembic upgrade head` applied successfully; `alembic current` reported the migration head; the live PostgreSQL database contains all 18 application tables and the `vector` extension; and `alembic check` found no schema drift. The seed command ran twice and left one sample course and topic with no demo accounts. `npm run build` passed. Browser checks covered signup, sign-in, refresh after reload, and sign-out; the temporary browser-test account was removed. All five local Compose services reported healthy. These checks validate the local phase acceptance, not production deployment or load capacity.
 
 
 ---

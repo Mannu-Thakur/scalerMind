@@ -8,6 +8,7 @@ from sqlalchemy import text
 
 from app.core.config import settings
 from app.db.engine import engine
+from app.auth.router import router as auth_router
 
 redis_client = Redis.from_url(
     settings.redis_url,
@@ -25,6 +26,7 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(title="ScalerMind API", version="0.1.0", lifespan=lifespan)
+app.include_router(auth_router)
 
 
 @app.get("/health", tags=["health"])

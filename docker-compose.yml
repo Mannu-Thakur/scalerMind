@@ -8,6 +8,11 @@ x-api-service: &api-service
   environment: &app-environment
     DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-scalermind}:${POSTGRES_PASSWORD:-local_development_only}@db:5432/${POSTGRES_DB:-scalermind}
     REDIS_URL: redis://redis:6379/0
+    APP_ENV: ${APP_ENV:-development}
+    JWT_SECRET_KEY: ${JWT_SECRET_KEY:-}
+    SECURE_AUTH_COOKIES: ${SECURE_AUTH_COOKIES:-false}
+    SEED_LEARNER_PASSWORD: ${SEED_LEARNER_PASSWORD:-}
+    SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-}
   depends_on: &app-dependencies
     db:
       condition: service_healthy
@@ -49,7 +54,7 @@ services:
 
   api:
     <<: *api-service
-    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    command: ["sh", "-c", "alembic upgrade head && exec uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"]
     ports:
       - "${API_PORT:-8000}:8000"
     volumes:

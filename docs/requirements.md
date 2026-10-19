@@ -5,7 +5,7 @@
 ### Authentication
 - FR-001: Users can register with email and password
 - FR-002: Users can log in and receive access + refresh tokens
-- FR-003: Access tokens expire after 15 minutes; refresh tokens after 30 days
+- FR-003: Access tokens expire after 15 minutes; refresh tokens after 7 days
 - FR-004: Users can log out (refresh token revoked)
 - FR-005: Two roles: learner and admin
 

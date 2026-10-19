@@ -62,7 +62,7 @@ and adaptive personalization into a cohesive product.
 | Embeddings | OpenAI text-embedding-3-small | High quality, cheap, batch API |
 | Reranker | cross-encoder/ms-marco-MiniLM-L-6-v2 | Fast, accurate, runs locally |
 | LLM | OpenAI GPT-4o-mini (default), GPT-4o (complex tasks) | Cost-effective, streaming, function calling |
-| Auth | JWT (python-jose) + bcrypt | Stateless, refresh tokens, role-based |
+| Auth | JWT (PyJWT) + bcrypt | Short-lived access tokens, rotating refresh sessions, role-based |
 | CI | GitHub Actions | Lint → typecheck → test → build |
 | Deployment | AWS ECS Fargate + RDS + ElastiCache + S3 | Serverless containers, managed services |
 | Local Dev | Docker Compose | One-command setup |
@@ -246,6 +246,12 @@ RouterAgent
 | CORS | Explicit origin allowlist |
 | Input validation | Pydantic v2 strict models |
 | LLM output validation | JSON schema validation on structured outputs |
+
+### Authentication implementation
+
+Access tokens are signed with HS256 and contain issuer, audience, type, subject, JTI, issue time, and expiration claims. The API returns the 15-minute access token in the JSON response for in-memory browser use. Refresh tokens live for 7 days, are held in an HttpOnly cookie, and are stored in PostgreSQL only as SHA-256 hashes. Each refresh rotates the token in its session family; replaying a revoked token revokes the remaining active sessions in that family. Refresh and logout requests require a double-submit CSRF cookie/header pair. Signup always assigns `learner`; admin role assignment is reserved for privileged provisioning.
+
+Production settings require an explicit JWT secret of at least 32 characters and secure cookies. Local development can omit the JWT secret, in which case each API process uses a random key; sessions therefore do not survive API restarts until a stable local secret is configured.
 
 ---
 
